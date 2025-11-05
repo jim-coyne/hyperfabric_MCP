@@ -69,8 +69,11 @@ npm run build
   }
 }
 ```
-
 3. Restart Claude Desktop application
+
+![Hyperfabric MCP Configuration](images/image1.png)
+
+![Hyperfabric MCP Setup](images/image2.png)
 
 ## Available Tools and Capabilities
 
