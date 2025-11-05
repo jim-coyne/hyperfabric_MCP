@@ -168,13 +168,66 @@ class HyperfabricMCPServer {
     return `${method}_${nameBase}`;
   }
 
+  private resolveSchemaRef(schema: any): any {
+    // If schema is a reference, resolve it from components
+    if (schema.$ref && typeof schema.$ref === 'string') {
+      const refPath = schema.$ref.split('/');
+      let resolved: any = this.openApiSpec;
+      
+      for (const part of refPath) {
+        if (part === '#') continue;
+        resolved = resolved?.[part];
+      }
+      
+      return resolved || schema;
+    }
+    return schema;
+  }
+
+  private deepResolveSchema(schema: any, depth: number = 0): any {
+    // Prevent infinite recursion
+    if (depth > 5 || !schema || typeof schema !== 'object') {
+      return schema;
+    }
+
+    // If this is a reference, resolve it
+    if (schema.$ref && typeof schema.$ref === 'string') {
+      schema = this.resolveSchemaRef(schema);
+    }
+
+    // Recursively resolve nested properties
+    if (schema.properties && typeof schema.properties === 'object') {
+      for (const [key, prop] of Object.entries(schema.properties)) {
+        (schema.properties as any)[key] = this.deepResolveSchema(prop as any, depth + 1);
+      }
+    }
+
+    // Recursively resolve items (for arrays)
+    if (schema.items) {
+      schema.items = this.deepResolveSchema(schema.items, depth + 1);
+    }
+
+    return schema;
+  }
+
   private createToolFromOperation(
     name: string,
     method: string,
     path: string,
     operation: OpenAPIOperation
   ): Tool | null {
-    const description = operation.summary || operation.description || `${method.toUpperCase()} ${path}`;
+    let description = operation.summary || operation.description || `${method.toUpperCase()} ${path}`;
+    
+    // Enhance description for create/update operations
+    if (['post', 'put', 'patch'].includes(method.toLowerCase())) {
+      if (method.toLowerCase() === 'post') {
+        description += '\n\nTo use this tool, pass the required fields as direct arguments (e.g., fabrics=[{name:"my-fabric", description:"...", ...}])';
+      } else if (method.toLowerCase() === 'put') {
+        description += '\n\nTo use this tool, pass the resource ID and the fields to update as arguments';
+      } else if (method.toLowerCase() === 'patch') {
+        description += '\n\nTo use this tool, pass the resource ID and the fields to patch as arguments';
+      }
+    }
     
     const properties: Record<string, any> = {};
     const required: string[] = [];
@@ -197,13 +250,26 @@ class HyperfabricMCPServer {
 
     // Process request body for POST/PUT/PATCH requests
     if (operation.requestBody && ['post', 'put', 'patch'].includes(method.toLowerCase())) {
-      const content = operation.requestBody.content;
+      // Resolve the requestBody reference if it exists
+      const requestBody = this.resolveSchemaRef(operation.requestBody);
+      const content = requestBody.content;
+      
       if (content?.['application/json']?.schema) {
-        properties.requestBody = {
-          type: 'object',
-          description: 'Request body data'
-        };
-        required.push('requestBody');
+        let schema = content['application/json'].schema;
+        // Deeply resolve schema references
+        schema = this.deepResolveSchema(schema);
+        
+        if (schema.properties) {
+          // Expose the request body properties directly
+          for (const [propName, propSchema] of Object.entries(schema.properties)) {
+            const propDef = propSchema as any;
+            properties[propName] = this.deepResolveSchema(propDef, 0);
+            
+            if (schema.required?.includes(propName)) {
+              required.push(propName);
+            }
+          }
+        }
       }
     }
 
@@ -227,6 +293,7 @@ class HyperfabricMCPServer {
       const { name, arguments: args } = request.params;
       
       logger.info(`Calling tool: ${name}`);
+      logger.debug(`Tool arguments: ${JSON.stringify(args, null, 2)}`);
       
       try {
         // Find the tool definition
@@ -318,8 +385,35 @@ class HyperfabricMCPServer {
     };
 
     // Handle request body for POST/PUT/PATCH
-    if (['post', 'put', 'patch'].includes(foundOperation.method.toLowerCase()) && args.requestBody) {
-      requestConfig.data = args.requestBody;
+    if (['post', 'put', 'patch'].includes(foundOperation.method.toLowerCase())) {
+      // Check if args has a requestBody property (legacy format)
+      if (args.requestBody) {
+        requestConfig.data = args.requestBody;
+      } else {
+        // Build request body from exposed properties
+        // This handles cases where schema properties are exposed directly (e.g., fabrics, nodes, etc.)
+        const requestBody: Record<string, any> = {};
+        const pathItem = this.openApiSpec?.paths?.[foundOperation.path];
+        const operation = (pathItem as any)?.[foundOperation.method];
+        
+        if (operation?.requestBody) {
+          const requestBodyDef = this.resolveSchemaRef(operation.requestBody);
+          const schema = this.deepResolveSchema(requestBodyDef.content?.['application/json']?.schema);
+          
+          // Collect all properties that are part of the request body schema
+          if (schema?.properties) {
+            for (const propName of Object.keys(schema.properties)) {
+              if (args.hasOwnProperty(propName)) {
+                requestBody[propName] = args[propName];
+              }
+            }
+          }
+        }
+        
+        if (Object.keys(requestBody).length > 0) {
+          requestConfig.data = requestBody;
+        }
+      }
     }
 
     logger.debug(`Making API call: ${requestConfig.method} ${url}`);
