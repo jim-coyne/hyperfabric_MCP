@@ -4,8 +4,8 @@
       "command": "node",
       "args": ["/Users/jicoyne/hyperfabric_MCP/dist/main.js"],
       "env": {
-        "HYPERFABRIC_API_TOKEN": "your-api-token-here",
-        "LOG_LEVEL": "info",
+        "HYPERFABRIC_API_TOKEN": "REPLACE_WITH_YOUR_ACTUAL_TOKEN_FROM_DOT_ENV_FILE",
+        "LOG_LEVEL": "debug",
         "OPENAPI_SPEC_PATH": "hf_spec_modified.json"
       }
     }

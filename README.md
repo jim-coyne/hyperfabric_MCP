@@ -75,6 +75,8 @@ npm run build
 
 ![Hyperfabric MCP Setup](images/image2.png)
 
+![Hyperfabric MCP Setup](images/image3.png)
+
 ## Available Tools and Capabilities
 
 The MCP server automatically generates **79 tools** from the complete Nexus Hyperfabric REST API v1.1.0 specification:
