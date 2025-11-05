@@ -1,0 +1,80 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sample Hyperfabric API",
+    "version": "1.0.0",
+    "description": "Example OpenAPI spec for testing the MCP server"
+  },
+  "servers": [
+    {
+      "url": "https://hyperfabric.cisco.com",
+      "description": "Hyperfabric API Server"
+    }
+  ],
+  "paths": {
+    "/servers": {
+      "get": {
+        "operationId": "listServers",
+        "summary": "List all servers",
+        "description": "Retrieve a list of all servers in the infrastructure",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of servers to return",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "servers": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/servers/{serverId}": {
+      "get": {
+        "operationId": "getServer",
+        "summary": "Get server details",
+        "description": "Retrieve details for a specific server",
+        "parameters": [
+          {
+            "name": "serverId",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the server",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Server details"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "name": "cisco-hyperfabric-mcp-server",
+  "version": "1.0.0",
+  "description": "TypeScript MCP server for Cisco Hyperfabric API",
+  "main": "dist/main.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/main.js",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "cisco",
+    "hyperfabric",
+    "openapi",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "axios": "^1.6.0",
+    "dotenv": "^16.3.0",
+    "json-schema": "^0.4.0",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

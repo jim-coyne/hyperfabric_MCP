@@ -1,0 +1,32 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch MCP Server",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/dist/main.js",
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env",
+      "preLaunchTask": "Build TypeScript",
+      "restart": true,
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+    },
+    {
+      "name": "Launch MCP Server (Dev)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/dist/main.js",
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env",
+      "env": {
+        "LOG_LEVEL": "debug"
+      },
+      "preLaunchTask": "Build TypeScript",
+      "restart": true,
+      "sourceMaps": true,
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"]
+    }
+  ]
+}
