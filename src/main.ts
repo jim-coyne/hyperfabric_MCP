@@ -14,9 +14,10 @@ import winston from 'winston';
 // Load environment variables
 dotenv.config();
 
-// Set up logging
+// Set up logging - IMPORTANT: MCP servers use stdout for JSON-RPC communication
+// so we MUST log to stderr to avoid corrupting the protocol messages
 const logger = winston.createLogger({
-  level: 'debug',
+  level: process.env.LOG_LEVEL || 'info',
   format: winston.format.combine(
     winston.format.timestamp(),
     winston.format.printf(({ timestamp, level, message }: any) => {
@@ -24,7 +25,9 @@ const logger = winston.createLogger({
     })
   ),
   transports: [
-    new winston.transports.Console()
+    new winston.transports.Console({
+      stderrLevels: ['error', 'warn', 'info', 'debug', 'verbose', 'silly']
+    })
   ]
 });
 
