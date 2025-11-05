@@ -159,13 +159,13 @@ class HyperfabricMCPServer {
 
   private generateToolName(method: string, path: string, operation: OpenAPIOperation): string {
     if (operation.operationId) {
-      return `mcp_${operation.operationId}`;
+      return operation.operationId;
     }
 
     // Generate a name from the method and path
     const pathParts = path.split('/').filter(part => part && !part.startsWith('{'));
     const nameBase = pathParts.join('_').replace(/[^a-zA-Z0-9_]/g, '_');
-    return `mcp_${method}_${nameBase}`;
+    return `${method}_${nameBase}`;
   }
 
   private createToolFromOperation(
