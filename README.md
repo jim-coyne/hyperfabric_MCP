@@ -1,10 +1,11 @@
 # Cisco Hyperfabric MCP Server
 
-An MCP (Model Context Protocol) server that enables LLMs to interact with Cisco Hyperfabric APIs. This server exposes all Hyperfabric OpenAPI endpoints as tools for comprehensive infrastructure management and automation.
+An MCP (Model Context Protocol) server that enables LLMs to interact with Cisco Hyperfabric APIs. This server exposes all 79 Hyperfabric OpenAPI endpoints as tools for comprehensive infrastructure management and automation.
 
 **🔧 Dynamic Tool Generation**: Automatically parses Hyperfabric OpenAPI specs and creates MCP tools  
 **🛡️ Secure Authentication**: Handles Hyperfabric API token authentication with proper security  
-**📊 Complete API Coverage**: Exposes all available Hyperfabric endpoints for infrastructure management
+**📊 Complete API Coverage**: Exposes all 79 available Hyperfabric endpoints for infrastructure management  
+**✨ Clean Tool Names**: Tools display with intuitive names like `fabricsGetAllFabrics` for easy discovery
 
 ### Prerequisites
 
@@ -73,43 +74,136 @@ npm run build
 
 ## Available Tools and Capabilities
 
-The MCP server automatically generates tools for all Hyperfabric API endpoints:
+The MCP server automatically generates **79 tools** from the complete Cisco Nexus Hyperfabric REST API v1.1.0 specification:
 
-### 🖥️ Infrastructure Management
-- **Server Operations**: List, query, and manage physical servers
-  - `mcp_hyperfabric_list_servers` - Retrieve all servers with filtering
-  - `mcp_hyperfabric_get_server_details` - Get detailed server information
-  - `mcp_hyperfabric_get_server_hardware` - Access hardware specifications
+### � Authentication & User Management (9 tools)
 
-### 🌐 Network Configuration  
-- **VLAN Management**: Configure and manage VLANs across fabric
-  - `mcp_hyperfabric_create_vlan` - Create new VLANs
-  - `mcp_hyperfabric_update_vlan` - Modify VLAN parameters
-  - `mcp_hyperfabric_list_vlans` - Retrieve all configured VLANs
+- **Bearer Token Management**: Secure API authentication
+  - `authGetBearerTokens` - List all bearer tokens for the user
+  - `authCreateBearerTokens` - Create new bearer tokens
+  - `authGetBearerToken` - Get specific bearer token details
+  - `authDeleteBearerToken` - Delete a specific bearer token
 
-### 📋 Policy Management
-- **Configuration Policies**: Create and manage server profiles
-  - `mcp_hyperfabric_create_server_profile` - Define new server profiles
-  - `mcp_hyperfabric_deploy_profile` - Apply profiles to servers
-  - `mcp_hyperfabric_update_policy` - Modify existing policies
+- **User Management**: User account operations
+  - `authGetUsers` - List all users in organization
+  - `authGetUser` - Get specific user details
+  - `authSetUsers` - Create or update users
+  - `authUpdateUser` - Update existing user
+  - `authDeleteUser` - Delete a user account
 
-### 🔒 Security & Compliance
-- **Certificate Management**: Handle SSL/TLS certificates and security
-  - `mcp_hyperfabric_list_certificates` - View certificate status
-  - `mcp_hyperfabric_security_audit` - Review security configurations
-  - `mcp_hyperfabric_compliance_check` - Validate policy compliance
+### 🖥️ Device Management (3 tools)
 
-### 📊 Monitoring & Telemetry
-- **Performance Metrics**: Track system performance and health
-  - `mcp_hyperfabric_get_cpu_metrics` - Monitor CPU utilization
-  - `mcp_hyperfabric_get_memory_stats` - Track memory consumption
-  - `mcp_hyperfabric_get_power_data` - Power consumption monitoring
+- **Device Operations**: Physical device management and binding
+  - `devicesGetDevices` - List all devices (bound and unbound)
+  - `devicesBindDevice` - Bind a device to a fabric node
+  - `devicesUnbindDevice` - Unbind device from a fabric node
 
-### 🔧 Automation & Workflows
-- **Firmware Management**: Handle updates and maintenance
-  - `mcp_hyperfabric_check_firmware` - Compare firmware versions
-  - `mcp_hyperfabric_schedule_update` - Plan firmware upgrades
-  - `mcp_hyperfabric_backup_config` - Save configurations
+### 🏗️ Fabric Management (16 tools)
+
+- **Fabric Configuration**: Core fabric operations
+  - `fabricsGetAllFabrics` - List all fabrics in organization
+  - `fabricsAddFabrics` - Create new fabrics
+  - `fabricsGetFabric` - Get specific fabric details
+  - `fabricsUpdateFabric` - Update fabric configuration
+  - `fabricsDeleteFabric` - Delete a fabric
+
+- **Connection Management**: Fabric network connections
+  - `fabricsGetFabricConnections` - List all connections in fabric
+  - `fabricsAddFabricConnections` - Add new connections
+  - `fabricsGetFabricConnection` - Get specific connection details
+  - `fabricsSetFabricConnections` - Replace all connections
+  - `fabricsDeleteFabricConnections` - Delete all connections
+  - `fabricsDeleteFabricConnection` - Delete specific connection
+
+- **Configuration Management**: Candidate configurations and deployment
+  - `fabricsGetFabricCandidates` - List candidate configurations
+  - `fabricsGetFabricCandidate` - Get specific candidate config
+  - `fabricsCommitFabricCandidate` - Deploy candidate to running config
+  - `fabricsRevertFabricCandidate` - Discard candidate configuration
+  - `fabricsReviewFabricCandidate` - Add comments to candidate config
+
+### 🌐 Network Configuration (3 tools)
+
+- **Spanning Tree Protocol**: Global STP settings
+  - `networksGetFabricStp` - Get fabric STP configuration
+  - `networksUpdateFabricStp` - Update STP settings
+  - `networksResetFabricStp` - Reset STP to defaults
+
+### � Node Management (25 tools)
+
+- **Node Operations**: Fabric node configuration
+  - `nodesGetFabricNodes` - List all nodes in fabric
+  - `nodesAddFabricNodes` - Add new nodes to fabric
+  - `nodesGetNamedFabricNode` - Get specific node details
+  - `nodesUpdateFabricNode` - Update node configuration
+  - `nodesDeleteFabricNode` - Remove node from fabric
+
+- **Port Management**: Node port configuration
+  - `nodesGetPorts` - List all ports for a node
+  - `nodesGetPort` - Get specific port details
+  - `nodesUpdatePort` - Update port configuration
+  - `nodesSetPorts` - Replace all port configurations
+  - `nodesResetPort` - Reset port to defaults
+
+- **Management Ports**: Out-of-band management interfaces
+  - `nodesGetManagementPorts` - List management ports
+  - `nodesAddManagementPorts` - Add management ports
+  - `nodesGetManagementPort` - Get specific management port
+  - `nodesUpdateManagementPort` - Update management port config
+
+- **Loopback Interfaces**: Virtual interfaces for routing
+  - `nodesGetNodeLoopbacks` - List loopback interfaces
+  - `nodesAddNodeLoopbacks` - Create loopback interfaces
+  - `nodesGetNodeLoopback` - Get specific loopback details
+  - `nodesUpdateNodeLoopback` - Update loopback configuration
+  - `nodesDeleteNodeLoopback` - Delete loopback interface
+
+- **Sub-Interfaces**: VLAN and sub-interface configuration
+  - `nodesGetNodeSubInterfaces` - List sub-interfaces
+  - `nodesAddNodeSubInterfaces` - Create sub-interfaces
+  - `nodesGetNodeSubInterface` - Get specific sub-interface
+  - `nodesUpdateNodeSubInterface` - Update sub-interface config
+  - `nodesDeleteNodeSubInterface` - Delete sub-interface
+
+### � Port Channel Management (5 tools)
+
+- **Link Aggregation**: Port channel operations
+  - `portchannelsGetAllPortChannels` - List all port channels
+  - `portchannelsAddPortChannels` - Create port channels
+  - `portchannelsGetPortChannel` - Get specific port channel
+  - `portchannelsUpdatePortChannel` - Update port channel config
+  - `portchannelsDeletePortChannel` - Delete port channel
+
+### 🏷️ VNI Management (9 tools)
+
+- **Virtual Network Identifiers**: VXLAN network segmentation
+  - `vnisGetFabricVnis` - List all VNIs in fabric
+  - `vnisAddFabricVnis` - Create new VNIs
+  - `vnisGetFabricVni` - Get specific VNI details
+  - `vnisUpdateFabricVni` - Update VNI configuration
+  - `vnisDeleteFabricVni` - Delete VNI
+
+- **VNI Membership**: Member interface management
+  - `vnisGetFabricVniMembers` - List VNI members
+  - `vnisAddFabricVniMembers` - Add members to VNI
+  - `vnisGetFabricVniMember` - Get specific member details
+  - `vnisDeleteFabricVniMember` - Remove member from VNI
+
+### �️ VRF Management (9 tools)
+
+- **Virtual Routing and Forwarding**: Layer 3 network isolation
+  - `vrfsGetFabricVrfs` - List all VRFs in fabric
+  - `vrfsAddFabricVrfs` - Create new VRFs
+  - `vrfsGetFabricVrf` - Get specific VRF details
+  - `vrfsUpdateFabricVrf` - Update VRF configuration
+  - `vrfsDeleteFabricVrf` - Delete VRF
+
+- **Static Routing**: Static route management within VRFs
+  - `vrfsGetFabricStaticRoutes` - List static routes in VRF
+  - `vrfsAddFabricStaticRoutes` - Add static routes
+  - `vrfsGetFabricStaticRoute` - Get specific route details
+  - `vrfsUpdateFabricStaticRoute` - Update static route
+  - `vrfsDeleteFabricStaticRoute` - Delete static route
 
 ## Environment Variables
 
@@ -122,14 +216,17 @@ The MCP server automatically generates tools for all Hyperfabric API endpoints:
 ## Development Setup
 
 ### Project Structure
+
 ```
 cisco-hyperfabric-mcp-server/
-├── src/main.ts              # Main server implementation
-├── dist/                    # Compiled JavaScript
-├── .vscode/                 # VS Code configuration
-├── package.json             # Dependencies & scripts
-├── tsconfig.json            # TypeScript config
-└── hf_spec_modified.json    # OpenAPI specification
+├── src/main.ts                                                    # Main server implementation
+├── dist/                                                          # Compiled JavaScript
+├── .vscode/                                                       # VS Code configuration
+├── package.json                                                   # Dependencies & scripts
+├── tsconfig.json                                                  # TypeScript config
+├── hf_spec_modified.json                                          # Complete Cisco Nexus Hyperfabric REST API v1.1.0 spec
+├── cisco_nexus_hyperfabric_rest_api_1_1_0_rev_2025_10_29_838_c_8.yaml # Original YAML spec file
+└── README.md                                                      # This documentation
 ```
 
 ## Troubleshooting
