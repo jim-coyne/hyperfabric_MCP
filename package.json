@@ -1,7 +1,7 @@
 {
-  "name": "cisco-hyperfabric-mcp-server",
+  "name": "hyperfabric-mcp-server",
   "version": "1.0.0",
-  "description": "TypeScript MCP server for Cisco Hyperfabric API",
+  "description": "TypeScript MCP server for Hyperfabric API",
   "main": "dist/main.js",
   "type": "module",
   "scripts": {
@@ -13,7 +13,6 @@
   },
   "keywords": [
     "mcp",
-    "cisco",
     "hyperfabric",
     "openapi",
     "typescript"

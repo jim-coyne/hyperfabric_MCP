@@ -88,7 +88,7 @@ class HyperfabricMCPServer {
     logger.info(`Using token: ${token.slice(0, 4)}...${token.slice(-4)}`);
 
     this.httpClient = axios.create({
-      baseURL: "https://hyperfabric.cisco.com",
+      baseURL: "https://hyperfabric.cisco.com/api/v1",
       headers: {
         "Authorization": `Bearer ${token}`,
         "Content-Type": "application/json",

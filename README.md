@@ -1,6 +1,6 @@
-# Cisco Hyperfabric MCP Server
+# Hyperfabric MCP Server
 
-An MCP (Model Context Protocol) server that enables LLMs to interact with Cisco Hyperfabric APIs. This server exposes all 79 Hyperfabric OpenAPI endpoints as tools for comprehensive infrastructure management and automation.
+An MCP (Model Context Protocol) server that enables LLMs to interact with Hyperfabric APIs. This server exposes all 79 Hyperfabric OpenAPI endpoints as tools for comprehensive infrastructure management and automation.
 
 **🔧 Dynamic Tool Generation**: Automatically parses Hyperfabric OpenAPI specs and creates MCP tools  
 **🛡️ Secure Authentication**: Handles Hyperfabric API token authentication with proper security  
@@ -34,7 +34,7 @@ npm run build
   "github.copilot.chat.mcp.servers": {
     "hyperfabric": {
       "command": "node",
-      "args": ["/path/to/cisco-hyperfabric-mcp-server/dist/main.js"],
+      "args": ["/path/to/hyperfabric-mcp-server/dist/main.js"],
       "env": {
         "HYPERFABRIC_API_TOKEN": "your-api-token",
         "LOG_LEVEL": "info"
@@ -60,7 +60,7 @@ npm run build
   "mcpServers": {
     "hyperfabric": {
       "command": "node",
-      "args": ["/path/to/cisco-hyperfabric-mcp-server/dist/main.js"],
+      "args": ["/path/to/hyperfabric-mcp-server/dist/main.js"],
       "env": {
         "HYPERFABRIC_API_TOKEN": "your-api-token",
         "LOG_LEVEL": "info"
@@ -74,7 +74,7 @@ npm run build
 
 ## Available Tools and Capabilities
 
-The MCP server automatically generates **79 tools** from the complete Cisco Nexus Hyperfabric REST API v1.1.0 specification:
+The MCP server automatically generates **79 tools** from the complete Nexus Hyperfabric REST API v1.1.0 specification:
 
 ### � Authentication & User Management (9 tools)
 
@@ -218,13 +218,13 @@ The MCP server automatically generates **79 tools** from the complete Cisco Nexu
 ### Project Structure
 
 ```
-cisco-hyperfabric-mcp-server/
+hyperfabric-mcp-server/
 ├── src/main.ts                                                    # Main server implementation
 ├── dist/                                                          # Compiled JavaScript
 ├── .vscode/                                                       # VS Code configuration
 ├── package.json                                                   # Dependencies & scripts
 ├── tsconfig.json                                                  # TypeScript config
-├── hf_spec_modified.json                                          # Complete Cisco Nexus Hyperfabric REST API v1.1.0 spec
+├── hf_spec_modified.json                                          # Complete Nexus Hyperfabric REST API v1.1.0 spec
 ├── cisco_nexus_hyperfabric_rest_api_1_1_0_rev_2025_10_29_838_c_8.yaml # Original YAML spec file
 └── README.md                                                      # This documentation
 ```
