@@ -100,7 +100,13 @@ class HyperfabricMCPServer {
   }
 
   private async loadOpenAPISpec(): Promise<void> {
-    const specFilePath = path.join(process.cwd(), 'hf_spec_modified.json');
+    // Get the spec file path - use environment variable if set, otherwise default to project directory
+    const specFileName = process.env.OPENAPI_SPEC_PATH || 'hf_spec_modified.json';
+    
+    // Resolve the path relative to the project directory (where package.json is)
+    // When running as MCP server, we need to resolve from the dist directory up to project root
+    const projectRoot = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+    const specFilePath = path.join(projectRoot, specFileName);
     
     try {
       const specContent = await fs.readFile(specFilePath, 'utf-8');

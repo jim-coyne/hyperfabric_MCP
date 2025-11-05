@@ -1,0 +1,13 @@
+{
+  "github.copilot.chat.mcp.servers": {
+    "hyperfabric": {
+      "command": "node",
+      "args": ["/Users/jicoyne/hyperfabric_MCP/dist/main.js"],
+      "env": {
+        "HYPERFABRIC_API_TOKEN": "your-api-token-here",
+        "LOG_LEVEL": "info",
+        "OPENAPI_SPEC_PATH": "hf_spec_modified.json"
+      }
+    }
+  }
+}
