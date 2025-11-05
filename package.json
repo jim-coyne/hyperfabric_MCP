@@ -18,8 +18,16 @@
     "openapi",
     "typescript"
   ],
-  "author": "",
+  "author": "Jim Coyne",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jim-coyne/hyperfabric_MCP.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jim-coyne/hyperfabric_MCP/issues"
+  },
+  "homepage": "https://github.com/jim-coyne/hyperfabric_MCP#readme",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",
     "axios": "^1.6.0",
