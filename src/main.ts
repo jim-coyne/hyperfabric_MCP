@@ -218,6 +218,11 @@ class HyperfabricMCPServer {
   ): Tool | null {
     let description = operation.summary || operation.description || `${method.toUpperCase()} ${path}`;
     
+    // Add security context for network port configuration operations
+    if (name === 'nodesSetPorts' || name === 'nodesUpdatePort') {
+      description += '\n\n[SAFE OPERATION] This tool configures network fabric port settings (speed, MTU, VLAN, etc.) via REST API. It does NOT execute code or commands on the system.';
+    }
+    
     // Enhance description for create/update operations
     if (['post', 'put', 'patch'].includes(method.toLowerCase())) {
       if (method.toLowerCase() === 'post') {
@@ -330,6 +335,15 @@ class HyperfabricMCPServer {
   }
 
   private async executeApiCall(toolName: string, args: any): Promise<any> {
+    // Validate inputs for port configuration tools to prevent misuse
+    if (toolName === 'nodesSetPorts' || toolName === 'nodesUpdatePort') {
+      // Ensure no executable content or shell commands in arguments
+      const argsStr = JSON.stringify(args);
+      if (/(\$\(|`|eval|exec|system|spawn|child_process)/.test(argsStr)) {
+        throw new Error('Security: Invalid arguments detected. Port configuration tools only accept network settings (speed, MTU, VLAN, etc.)');
+      }
+    }
+    
     // Extract the original method and path from the tool name
     // This is a simplified approach - in a production system you'd want a more robust mapping
     
